@@ -1,0 +1,195 @@
+src: {
+    'command_line_arguments_parser.ts': 'class CommandLineArguments {\r\n' +
+      '  private args: string[];\r\n' +
+      '\r\n' +
+      '  constructor(args: string[]) {\r\n' +
+      '    this.args = args;\r\n' +
+      '  }\r\n' +
+      '\r\n' +
+      '  checkForOption(option: string): boolean {\r\n' +
+      '    return this.args.includes(option);\r\n' +
+      '  }\r\n' +
+      '\r\n' +
+      '  getOptionValue(option: string): string | null {\r\n' +
+      '    if (this.checkForOption(option)) {\r\n' +
+      '      const optionIndex = this.args.indexOf(option);\r\n' +
+      '      if (optionIndex + 1 < this.args.length) {\r\n' +
+      '        return this.args[optionIndex + 1];\r\n' +
+      '      }\r\n' +
+      '    }\r\n' +
+      '    return null;\r\n' +
+      '  }\r\n' +
+      '}\r\n' +
+      '\r\n' +
+      'export {CommandLineArguments}',
+    'DB_repo.ts': '',
+    'index.ts': '#!/usr/bin/env node\r\n' +
+      'import { CommandLineArguments } from "./command_line_arguments_parser.js"\r\n' +
+      'enum command_options{\r\n' +
+      '    ADD = "--add",\r\n' +
+      '    REMOVE = "--remove",\r\n' +
+      '    INSTALL = "--install"\r\n' +
+      '}\r\n' +
+      '\r\n' +
+      'function main() {\r\n' +
+      '    console.log(process.argv)\r\n' +
+      '    const args = new CommandLineArguments(process.argv.slice(2))\r\n' +
+      '    if (args.checkForOption(command_options.ADD)) {\r\n' +
+      '        console.log("add")\r\n' +
+      '    }else if(args.checkForOption(command_options.REMOVE)){\r\n' +
+      '        console.log("remove")\r\n' +
+      '    } else if (args.checkForOption(command_options.INSTALL)) {\r\n' +
+      '        console.log("install")\r\n' +
+      '    }\r\n' +
+      '}\r\n' +
+      '\r\n' +
+      'main()',
+    'Template_maker.ts': "import fs from 'fs';\r\n" +
+      "import path from 'path';\r\n" +
+      '\r\n' +
+      'class Template_Maker {\r\n' +
+      '  private parent_directory: string;\r\n' +
+      '  private directory_map: object;\r\n' +
+      '  private ignore_list: Set<string>;\r\n' +
+      '\r\n' +
+      "  constructor(parent_directory: string = '.') {\r\n" +
+      '    this.parent_directory = parent_directory;\r\n' +
+      '    this.directory_map = {};\r\n' +
+      '    this.ignore_list = this.loadIgnoreList();\r\n' +
+      "    this.ignore_list.add('.git'); // Add .git to the default ignore list\r\n" +
+      '  }\r\n' +
+      '\r\n' +
+      '  loadIgnoreList(): Set<string> {\r\n' +
+      "    const ignoreFile = path.join(this.parent_directory, '.templateignore');\r\n" +
+      '    if (fs.existsSync(ignoreFile)) {\r\n' +
+      "      const ignoreContent = fs.readFileSync(ignoreFile, 'utf-8');\r\n" +
+      "      const patterns = ignoreContent.split('\\n').map(p => p.trim()).filter(p => p !== '');\r\n" +
+      '      return new Set(patterns);\r\n' +
+      '    }\r\n' +
+      '    return new Set();\r\n' +
+      '  }\r\n' +
+      '\r\n' +
+      '  isIgnored(name: string): boolean {\r\n' +
+      '    return Array.from(this.ignore_list).some(pattern => {\r\n' +
+      "      if (pattern.startsWith('/')) {\r\n" +
+      '        return name === pattern.slice(1); // Exact match for files/directories\r\n' +
+      '      } else {\r\n' +
+      '        return name.includes(pattern); // Partial match for files/directories\r\n' +
+      '      }\r\n' +
+      '    });\r\n' +
+      '  }\r\n' +
+      '\r\n' +
+      '  map_directory(directory: string = this.parent_directory): object {\r\n' +
+      '    const contents = fs.readdirSync(directory);\r\n' +
+      '\r\n' +
+      '    const entries: any = {};\r\n' +
+      '\r\n' +
+      '    for (const item of contents) {\r\n' +
+      "      if (item === '.' || item === '..' || this.isIgnored(item)) {\r\n" +
+      '        continue; // Skip system-created and ignored files/directories\r\n' +
+      '      }\r\n' +
+      '\r\n' +
+      '      const itemPath = path.join(directory, item);\r\n' +
+      '      const stats = fs.statSync(itemPath);\r\n' +
+      '\r\n' +
+      '      if (stats.isDirectory()) {\r\n' +
+      '        entries[item] = this.map_directory(itemPath); // Recursively map subdirectories\r\n' +
+      '      } else {\r\n' +
+      "        const fileContent = fs.readFileSync(itemPath, 'utf-8');\r\n" +
+      '        entries[item] = fileContent; // Store file content\r\n' +
+      '      }\r\n' +
+      '    }\r\n' +
+      '\r\n' +
+      '    this.directory_map[path.basename(directory)] = entries;\r\n' +
+      '    return this.directory_map;\r\n' +
+      '  }\r\n' +
+      '}\r\n' +
+      '\r\n' +
+      '// Example usage with the current directory\r\n' +
+      'const maker = new Template_Maker(); // This defaults to the current directory\r\n' +
+      'const directoryMap = maker.map_directory();\r\n' +
+      'console.log(directoryMap);\r\n'
+  },
+  '.': {
+    '.templateignore': 'node_modules\r\n/node_modules\r\ndist\r\n/dist',
+    'package-lock.json': '{\n' +
+      '  "name": "js_template_manager",\n' +
+      '  "version": "1.0.0",\n' +
+      '  "lockfileVersion": 3,\n' +
+      '  "requires": true,\n' +
+      '  "packages": {\n' +
+      '    "": {\n' +
+      '      "name": "js_template_manager",\n' +
+      '      "version": "1.0.0",\n' +
+      '      "license": "ISC",\n' +
+      '      "dependencies": {\n' +
+      '        "@types/node": "^20.10.5",\n' +
+      '        "typescript": "^5.3.3"\n' +
+      '      }\n' +
+      '    },\n' +
+      '    "node_modules/@types/node": {\n' +
+      '      "version": "20.10.5",\n' +
+      '      "resolved": "https://registry.npmjs.org/@types/node/-/node-20.10.5.tgz",\n' +
+      '      "integrity": "sha512-nNPsNE65wjMxEKI93yOP+NPGGBJz/PoN3kZsVLee0XMiJolxSekEVD8wRwBUBqkwc7UWop0edW50yrCQW4CyRw==",\n' +
+      '      "dependencies": {\n' +
+      '        "undici-types": "~5.26.4"\n' +
+      '      }\n' +
+      '    },\n' +
+      '    "node_modules/typescript": {\n' +
+      '      "version": "5.3.3",\n' +
+      '      "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.3.3.tgz",\n' +
+      '      "integrity": "sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==",\n' +
+      '      "bin": {\n' +
+      '        "tsc": "bin/tsc",\n' +
+      '        "tsserver": "bin/tsserver"\n' +
+      '      },\n' +
+      '      "engines": {\n' +
+      '        "node": ">=14.17"\n' +
+      '      }\n' +
+      '    },\n' +
+      '    "node_modules/undici-types": {\n' +
+      '      "version": "5.26.5",\n' +
+      '      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-5.26.5.tgz",\n' +
+      '      "integrity": "sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA=="\n' +
+      '    }\n' +
+      '  }\n' +
+      '}\n',
+    'package.json': '{\n' +
+      '  "name": "js_template_manager",\n' +
+      '  "version": "1.0.0",\n' +
+      '  "description": "",\n' +
+      '  "main": "index.js",\n' +
+      '  "type":"module",\n' +
+      '  "bin":{\n' +
+      '    "ntm":"./dist/index.js"\n' +
+      '  } ,\n' +
+      '\n' +
+      '  "scripts": {\n' +
+      '    "test": "echo \\"Error: no test specified\\" && exit 1",\n' +
+      '    "build":"tsc"\n' +
+      '  },\n' +
+      '  "keywords": [],\n' +
+      '  "author": "",\n' +
+      '  "license": "ISC",\n' +
+      '  "dependencies": {\n' +
+      '    "@types/node": "^20.10.5",\n' +
+      '    "typescript": "^5.3.3"\n' +
+      '  }\n' +
+      '}\n',
+    'readme.md': '-- HOW TO START --\r\n' +
+      '\r\n' +
+      '- as an executable -> just need to install the package\r\n' +
+      '- compile yourself -> npx run build , node ./dist/index.js\r\n',
+    src: [Circular *1],
+    'tsconfig.json': '{\r\n' +
+      '  "compilerOptions": {\r\n' +
+      '    "module": "NodeNext",\r\n' +
+      '    "moduleResolution": "NodeNext",\r\n' +
+      '    "target": "ES2020",\r\n' +
+      '    "sourceMap": true,\r\n' +
+      '    "outDir":"dist"\r\n' +
+      '  },\r\n' +
+      '  "include": ["src/**/*"]\r\n' +
+      '}'
+  }
+}
