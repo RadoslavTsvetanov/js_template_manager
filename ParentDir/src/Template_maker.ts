@@ -3,7 +3,7 @@ import path from 'path';
 
 class TemplateMaker {
   private parent_directory: string;
-  private directory_map: object;
+  private directory_map: { [key: string]: string | object };
   private ignore_list: Set<string>;
 
   constructor(parent_directory = '.') {
@@ -36,30 +36,32 @@ class TemplateMaker {
     });
   }
 
-  mapDirectory(directory = this.parent_directory): object {
+  mapDirectory(directory = this.parent_directory): { [key: string]: string | object } {
     const contents = fs.readdirSync(directory);
-    const entries: any = {};
+    const entries: { [key: string]: string | object } = {};
 
     for (const item of contents) {
       if (item === '.' || item === '..' || this.isIgnored(item)) {
         continue; // Skip system-created and ignored files/directories
       }
+
       const itemPath = path.join(directory, item);
       const stats = fs.statSync(itemPath);
 
       if (stats.isDirectory()) {
+        console.log(`Creating folder: ${itemPath}`);
         entries[item] = this.mapDirectory(itemPath); // Recursively map subdirectories
       } else {
         const fileContent = fs.readFileSync(itemPath, 'utf-8');
+        console.log(`Creating file: ${itemPath}`);
         entries[item] = fileContent; // Store file content
       }
     }
 
-    this.directory_map[path.basename(directory)] = entries;
-    return this.directory_map;
+    return entries;
   }
 
-  generateFilesFromTemplate(template: any, baseDirectory: string): void {
+  generateFilesFromTemplate(template: { [key: string]: string | object }, baseDirectory: string): void {
     if (template === undefined) {
       template = this.directory_map;
     }
@@ -70,11 +72,13 @@ class TemplateMaker {
 
       if (typeof item === 'object') {
         // If it's a folder, create the folder and recurse into it
+        console.log(`Creating folder: ${itemPath}`);
         fs.mkdirSync(itemPath, { recursive: true });
-        this.generateFilesFromTemplate(item, itemPath);
+        this.generateFilesFromTemplate(item as { [key: string]: string | object }, itemPath);
       } else {
         // If it's a file, create the file with content
-        fs.writeFileSync(itemPath, item);
+        console.log(`Creating file: ${itemPath}`);
+        fs.writeFileSync(itemPath, item as string);
       }
     }
   }
@@ -87,7 +91,7 @@ if (!fs.existsSync(parentDirectory)) {
   fs.mkdirSync(parentDirectory, { recursive: true });
 }
 
-const maker = new TemplateMaker(parentDirectory);
+const maker = new TemplateMaker();
 const directoryMap = maker.mapDirectory();
-maker.generateFilesFromTemplate(undefined, parentDirectory);
+maker.generateFilesFromTemplate(directoryMap, parentDirectory);
 console.log(directoryMap);
