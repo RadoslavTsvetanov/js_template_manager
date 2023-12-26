@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-
 class TemplateMaker {
   constructor(parent_directory = ".") {
     this.parent_directory = parent_directory;
@@ -8,7 +7,6 @@ class TemplateMaker {
     this.ignore_list = this.loadIgnoreList();
     this.ignore_list.add(".git");
   }
-
   loadIgnoreList() {
     const ignoreFile = path.join(this.parent_directory, ".templateignore");
     if (fs.existsSync(ignoreFile)) {
@@ -21,7 +19,6 @@ class TemplateMaker {
     }
     return new Set();
   }
-
   isIgnored(name) {
     return Array.from(this.ignore_list).some((pattern) => {
       if (pattern.startsWith("/")) {
@@ -31,19 +28,15 @@ class TemplateMaker {
       }
     });
   }
-
   mapDirectory(directory = this.parent_directory) {
     const contents = fs.readdirSync(directory);
     const entries = {};
-
     for (const item of contents) {
       if (item === "." || item === ".." || this.isIgnored(item)) {
         continue; // Skip system-created and ignored files/directories
       }
-
       const itemPath = path.join(directory, item);
       const stats = fs.statSync(itemPath);
-
       if (stats.isDirectory()) {
         console.log(`Creating folder: ${itemPath}`);
         entries[item] = this.mapDirectory(itemPath); // Recursively map subdirectories
@@ -53,19 +46,15 @@ class TemplateMaker {
         entries[item] = fileContent; // Store file content
       }
     }
-
     return entries;
   }
-
   generateFilesFromTemplate(template, baseDirectory) {
     if (template === undefined) {
       template = this.directory_map;
     }
-
     for (const itemName in template) {
       const itemPath = path.join(baseDirectory, itemName);
       const item = template[itemName];
-
       if (typeof item === "object") {
         // If it's a folder, create the folder and recurse into it
         console.log(`Creating folder: ${itemPath}`);
@@ -79,15 +68,14 @@ class TemplateMaker {
     }
   }
 }
-
 // Example usage with a specified parent directory
 const baseDirectory = process.cwd(); // Current working directory
-const parentDirectory = path.join(baseDirectory, "ParentDir"); // Specified parent directory
+const parentDirectory = path.join(baseDirectory, "ParentDir");
 if (!fs.existsSync(parentDirectory)) {
   fs.mkdirSync(parentDirectory, { recursive: true });
 }
-
 const maker = new TemplateMaker();
 const directoryMap = maker.mapDirectory();
 maker.generateFilesFromTemplate(directoryMap, parentDirectory);
 console.log(directoryMap);
+//# sourceMappingURL=Template_maker.js.map
