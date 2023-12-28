@@ -1,0 +1,26 @@
+# Use an official Node.js LTS image as the base image
+FROM node:lts-alpine
+
+# Set working directory in the container
+WORKDIR /usr/src/app
+
+# Install Redis server
+RUN apk add --no-cache redis
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --production
+
+# Copy the compiled files from the dist folder
+COPY ./dist ./dist
+
+# Expose port 3006 for Node.js (if needed)
+EXPOSE 3006
+
+# Copy Redis configuration file
+COPY redis.conf /etc/redis.conf
+
+# Command to start Redis and then the Node.js server
+CMD ["sh", "-c", "redis-server /etc/redis.conf --daemonize yes && sleep 5 && node ./dist/server.js"]
