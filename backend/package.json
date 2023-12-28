@@ -6,7 +6,9 @@
   "scripts": {
     "start": "npm run build && node dist/api.js",
     "dev": "nodemon src/index.ts --exec 'ts-node' --watch 'src/**/*.ts'",
-    "build": "tsc"
+    "build": "tsc",
+    "docker_build": "docker build -t backend .",
+    "docker_start": "docker run -p 3000:3000 backend"
   },
   
   "keywords": [],
