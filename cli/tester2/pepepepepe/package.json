@@ -1,0 +1,37 @@
+{
+  "name": "js_template_manager",
+  "version": "1.0.0",
+  "description": "-- HOW TO START --",
+  "main": "index.js",
+  "type": "module", 
+  "bin": {
+    "my-command": "./dist/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/mapped-types": "*",
+    "@types/node": "^20.10.5",
+    "axios": "^1.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RadoslavTsvetanov/js_template_manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RadoslavTsvetanov/js_template_manager/issues"
+  },
+  "homepage": "https://github.com/RadoslavTsvetanov/js_template_manager#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

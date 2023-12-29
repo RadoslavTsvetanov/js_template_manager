@@ -7,10 +7,11 @@ export class TemplateMaker {
   private ignore_list: Set<string>;
 
   constructor(parent_directory = '.') {
-    this.parent_directory = path.join(process.cwd(), parent_directory);
+    this.parent_directory = parent_directory;
     this.directory_map = {};
     this.ignore_list = this.loadIgnoreList();
     this.ignore_list.add('.git');
+    this.ignore_list.add('.templateignore')
   }
 
   loadIgnoreList(): Set<string> {
@@ -61,6 +62,11 @@ export class TemplateMaker {
     return entries;
   }
 
+  create_parent_folder(parentDir: string,template: {[key: string] : string}){
+    fs.mkdirSync(path.join(process.cwd(),parentDir))
+    this.generateFilesFromTemplate(template,parentDir)
+  }
+
   generateFilesFromTemplate(template: { [key: string]: string | object }, baseDirectory: string): void {
     if (template === undefined) {
       template = this.directory_map;
@@ -83,3 +89,15 @@ export class TemplateMaker {
     }
   }
 }
+
+// Example usage with a specified parent directory
+// const baseDirectory = process.cwd(); // Current working directory
+// const parentDirectory = path.join(baseDirectory, 'ParentDir'); 
+// if (!fs.existsSync(parentDirectory)) {
+//   fs.mkdirSync(parentDirectory, { recursive: true });
+// }
+
+// const maker = new TemplateMaker();
+// const directoryMap = maker.mapDirectory();
+// maker.generateFilesFromTemplate(directoryMap, parentDirectory);
+// console.log(directoryMap);

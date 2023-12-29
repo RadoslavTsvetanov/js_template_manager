@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 export class TemplateMaker {
     constructor(parent_directory = '.') {
-        this.parent_directory = parent_directory;
+        this.parent_directory = path.join(process.cwd(), parent_directory);
         this.directory_map = {};
         this.ignore_list = this.loadIgnoreList();
         this.ignore_list.add('.git');
@@ -71,14 +71,4 @@ export class TemplateMaker {
         }
     }
 }
-// Example usage with a specified parent directory
-// const baseDirectory = process.cwd(); // Current working directory
-// const parentDirectory = path.join(baseDirectory, 'ParentDir'); 
-// if (!fs.existsSync(parentDirectory)) {
-//   fs.mkdirSync(parentDirectory, { recursive: true });
-// }
-// const maker = new TemplateMaker();
-// const directoryMap = maker.mapDirectory();
-// maker.generateFilesFromTemplate(directoryMap, parentDirectory);
-// console.log(directoryMap);
 //# sourceMappingURL=Template_maker.js.map
