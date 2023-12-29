@@ -1,67 +1,73 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RedisClient = void 0;
-const net_1 = __importDefault(require("net"));
+const mongoose_1 = __importStar(require("mongoose"));
 class RedisClient {
     constructor() {
-        this.client = net_1.default.createConnection({ port: 6379, host: '127.0.0.1' }, () => {
-            console.log('Connected to Redis server');
+        mongoose_1.default.connect('mongodb+srv://KURO:KURO@task-manager.8d8g6sk.mongodb.net/${db_name}?retryWrites=true&w=majority');
+        const templateSchema = new mongoose_1.Schema({
+            key: { type: String, required: true },
+            value: { type: String, required: true },
         });
-        this.client.on('end', () => {
-            console.log('Disconnected from Redis server');
-        });
-    }
-    sendCommand(command) {
-        const commandString = `*${command.length}\r\n${command
-            .map(arg => `$${Buffer.byteLength(arg)}\r\n${arg}`)
-            .join('\r\n')}\r\n`;
-        this.client.write(commandString);
-    }
-    async sendCommandWithCallback(command) {
-        return new Promise((resolve) => {
-            this.sendCommand(command);
-            this.client.on('data', (data) => {
-                const response = data.toString();
-                resolve(this.parseResponse(response));
-            });
-        });
-    }
-    parseResponse(response) {
-        const [type, content] = response.split('\r\n').filter(Boolean);
-        switch (type.charAt(0)) {
-            case '+': // Single line reply
-                return { success: true, value: content };
-            case '*': // Array reply
-                const count = parseInt(type.slice(1), 10);
-                if (count === -1)
-                    return { success: true, value: null };
-                const values = content.split('\r\n').filter(Boolean);
-                return { success: true, value: values };
-            case '$': // Bulk string reply
-                const length = parseInt(type.slice(1), 10);
-                if (length === -1)
-                    return { success: true, value: null };
-                return { success: true, value: content.slice(0, length) };
-            case '-': // Error reply
-                return { success: false, value: null, error: content };
-            default: // delete reply ciulld be bug also
-                return { success: true, value: "Unexpected server response" };
-        }
+        this.TemplateModel = mongoose_1.default.model('Template', templateSchema);
     }
     async set(key, value) {
-        return this.sendCommandWithCallback(['SET', key, value]);
+        try {
+            const existingTemplate = await this.TemplateModel.findOne({ key });
+            if (existingTemplate) {
+                return { success: false, value: existingTemplate };
+            }
+            const newTemplate = await this.TemplateModel.create({ key, value });
+            return { success: true, value: newTemplate };
+        }
+        catch (error) {
+            return { success: false, value: null };
+        }
     }
     async get(key) {
-        return this.sendCommandWithCallback(['GET', key]);
+        try {
+            const template = await this.TemplateModel.findOne({ key });
+            return { success: true, value: template };
+        }
+        catch (error) {
+            return { success: false, value: null };
+        }
     }
     async delete(key) {
-        return this.sendCommandWithCallback(['DEL', key]);
+        try {
+            const template = await this.TemplateModel.findOneAndDelete({ key });
+            return { success: true, value: template };
+        }
+        catch (error) {
+            return { success: false, value: null };
+        }
     }
 }
 exports.RedisClient = RedisClient;
+// Test function to demonstrate usage
 async function testRedisClient() {
     const redis = new RedisClient();
     const setResult = await redis.set('myKey', 'myValue');

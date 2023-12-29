@@ -1,51 +1,36 @@
-
 import express, { Request, Response } from 'express';
-import { RedisClient, OperationResult } from './redis';
+import * as bodyParser from 'body-parser';
+import { Saver } from './saver'; // Import your Saver class implementation
 
 const app = express();
-const redis = new RedisClient();
-// TODO fix nil value from redis giving succes:true
-app.use(express.json());
+app.use(bodyParser.json());
 
-app.get('/get/:key', async (req: Request, res: Response) => {
-  const key = req.params.key;
-  const result: OperationResult = await redis.get(key);
+const saver = new Saver('templates.json');
 
-  if (result.success) {
-    res.status(200).json({ success: true, value: result.value });
-  } else {
-    res.status(500).json({ success: false, error: result.error || 'Unknown error' });
-  }
+app.post('/templates', (req: Request, res: Response) => {
+    const { key, value } = req.body;
+    if (!key || !value) {
+        return res.status(400).json({ error: 'Both key and value are required.' });
+    }
+    saver.create(key, value);
+    res.status(201).json({ message: `Template ${key} created successfully.` });
 });
 
-app.post('/set', async (req: Request, res: Response) => {
-  const { key, value } = req.body;
-  if (!key || !value) {
-    return res.status(400).json({ success: false, error: 'Both key and value are required' });
-  }
-
-  const setResult: OperationResult = await redis.set(key, value);
-
-  if (setResult.success) {
-    res.status(200).json({ success: true });
-  } else {
-    res.status(500).json({ success: false, error: setResult.error || 'Unknown error' });
-  }
+app.get('/templates/:key', (req: Request, res: Response) => {
+    const template = saver.get(req.params.key);
+    if (template) {
+        res.json({ [req.params.key]: template });
+    } else {
+        res.status(404).json({ error: `Template with key ${req.params.key} not found.` });
+    }
 });
 
-app.delete('/delete/:key', async (req: Request, res: Response) => {
-  const key = req.params.key;
-  const deleteResult: OperationResult = await redis.delete(key);
-
-  if (deleteResult.success) {
-    res.status(200).json({ success: true });
-  } else {
-    res.status(500).json({ success: false, error: deleteResult.error || 'Unknown error' });
-  }
+app.delete('/templates/:key', (req: Request, res: Response) => {
+    saver.delete(req.params.key);
+    res.json({ message: `Template ${req.params.key} deleted successfully.` });
 });
 
-const PORT = process.env.PORT || 3000;
-
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
