@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "-- HOW TO START --",
   "main": "index.js",
-  "type": "module",
+  "type": "module", 
   "bin": {
-    "ntm": "dist/index.js"
+    "my-command": "./dist/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,8 @@
   "license": "ISC",
   "dependencies": {
     "@nestjs/mapped-types": "*",
-    "@types/node": "^20.10.5"
+    "@types/node": "^20.10.5",
+    "axios": "^1.6.3"
   },
   "repository": {
     "type": "git",

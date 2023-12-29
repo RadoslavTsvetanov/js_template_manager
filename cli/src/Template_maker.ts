@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-class TemplateMaker {
+export class TemplateMaker {
   private parent_directory: string;
   private directory_map: { [key: string]: string | object };
   private ignore_list: Set<string>;
@@ -85,13 +85,13 @@ class TemplateMaker {
 }
 
 // Example usage with a specified parent directory
-const baseDirectory = process.cwd(); // Current working directory
-const parentDirectory = path.join(baseDirectory, 'ParentDir'); 
-if (!fs.existsSync(parentDirectory)) {
-  fs.mkdirSync(parentDirectory, { recursive: true });
-}
+// const baseDirectory = process.cwd(); // Current working directory
+// const parentDirectory = path.join(baseDirectory, 'ParentDir'); 
+// if (!fs.existsSync(parentDirectory)) {
+//   fs.mkdirSync(parentDirectory, { recursive: true });
+// }
 
-const maker = new TemplateMaker();
-const directoryMap = maker.mapDirectory();
-maker.generateFilesFromTemplate(directoryMap, parentDirectory);
-console.log(directoryMap);
+// const maker = new TemplateMaker();
+// const directoryMap = maker.mapDirectory();
+// maker.generateFilesFromTemplate(directoryMap, parentDirectory);
+// console.log(directoryMap);
