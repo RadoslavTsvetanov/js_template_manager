@@ -1,7 +1,7 @@
+# Use the latest Node.js image as base
 FROM node:latest
 
-RUN apt-get update && apt-get install -y redis-server
-
+# Set the working directory in the container
 WORKDIR /app
 
 # Copy package.json and package-lock.json
@@ -16,5 +16,5 @@ COPY dist ./dist
 # Expose the necessary port (e.g., 3000)
 EXPOSE 3000
 
-# Command to start Redis and your Node.js application
-CMD ["bash", "-c", "service redis-server start && node dist/api.js"]
+# Command to start the Node.js application
+CMD ["node", "dist/api.js"]
