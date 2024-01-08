@@ -4,32 +4,41 @@ import { ApiClient } from "./api_client.js";
 import { TemplateMaker } from "./Template_maker.js";
 var command_options;
 (function (command_options) {
-    command_options["ADD"] = "--add";
-    command_options["REMOVE"] = "--remove";
-    command_options["INSTALL"] = "--install";
-    command_options["NAME"] = "--name";
-    command_options["DIR"] = "--dir";
+  command_options["ADD"] = "--add";
+  command_options["REMOVE"] = "--remove";
+  command_options["INSTALL"] = "--install";
+  command_options["NAME"] = "--name";
+  command_options["DIR"] = "--dir";
 })(command_options || (command_options = {}));
 async function main() {
-    console.log(process.argv);
-    const args = new CommandLineArguments(process.argv);
-    if (args.checkForOption(command_options.ADD)) {
-        const api_client = new ApiClient("http://localhost:3000");
-        console.log("add");
-        const Templater = new TemplateMaker(args.getOptionValue(command_options.ADD));
-        await api_client.createTemplate(args.getOptionValue(command_options.NAME), JSON.stringify(Templater.mapDirectory()));
-    }
-    else if (args.checkForOption(command_options.REMOVE)) {
-        console.log("remove");
-    }
-    else if (args.checkForOption(command_options.INSTALL)) {
-        console.log("install");
-        const directory = args.getOptionValue(command_options.DIR) || process.cwd(); // Use current directory if --dir flag is not provided
-        const Templater = new TemplateMaker(directory);
-        const api = new ApiClient("http://localhost:3000");
-        const template = await api.getTemplate(args.getOptionValue(command_options.NAME));
-        Templater.generateFilesFromTemplate(JSON.parse(template[args.getOptionValue(command_options.NAME)]), directory);
-    }
+  console.log(process.argv);
+  const args = new CommandLineArguments(process.argv);
+  if (args.checkForOption(command_options.ADD)) {
+    const api_client = new ApiClient("http://localhost:3000");
+    console.log("add");
+    const Templater = new TemplateMaker(
+      args.getOptionValue(command_options.ADD)
+    );
+    console.log(Templater.mapDirectory());
+    await api_client.createTemplate(
+      args.getOptionValue(command_options.NAME),
+      JSON.stringify(Templater.mapDirectory())
+    );
+  } else if (args.checkForOption(command_options.REMOVE)) {
+    console.log("remove");
+  } else if (args.checkForOption(command_options.INSTALL)) {
+    console.log("install");
+    const directory = args.getOptionValue(command_options.DIR) || process.cwd(); // Use current directory if --dir flag is not provided
+    const Templater = new TemplateMaker(directory);
+    const api = new ApiClient("http://localhost:3000");
+    const template = await api.getTemplate(
+      args.getOptionValue(command_options.NAME)
+    );
+    Templater.generateFilesFromTemplate(
+      JSON.parse(template[args.getOptionValue(command_options.NAME)]),
+      directory
+    );
+  }
 }
 main();
 //# sourceMappingURL=index.js.map
