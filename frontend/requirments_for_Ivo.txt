@@ -1,0 +1,2 @@
+Learn nextjs, tailwind and react query
+Use create-t3-app@latest for the frontend init with the pages directory (the other option which he should not choose is experimental)
