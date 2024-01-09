@@ -33,7 +33,7 @@ async function main() {
     const directory = args.getOptionValue(command_options.DIR) || process.cwd(); // Use current directory if --dir flag is not provided
 
     const Templater = new TemplateMaker(directory);
-    const api = new ApiClient("http://localhost:3000");
+    const api = new ApiClient(process.env.URL || "http://localhost:3000");
 
     const template = await api.getTemplate(args.getOptionValue(command_options.NAME));
     Templater.generateFilesFromTemplate(
