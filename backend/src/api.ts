@@ -9,6 +9,10 @@ const saver = new Saver('templates.json');
 
 app.post('/templates', (req: Request, res: Response) => {
     const { key, value } = req.body;
+    if (!(saver.get(key) === undefined)) {
+        res.status(400).json({ error: `template with name ${key} already exists` })
+        return; //! important to end the post req execution
+    }
     if (!key || !value) {
         return res.status(400).json({ error: 'Both key and value are required.' });
     }

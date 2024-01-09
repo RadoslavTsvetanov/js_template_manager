@@ -1,0 +1,2 @@
+docker builf -t backend .
+docker run -p 3000:3000 
