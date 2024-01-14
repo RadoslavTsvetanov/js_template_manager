@@ -1,4 +1,4 @@
-** THINGS TO DO **
+**THINGS TO DO**
 
 - deploy backend using kubernetes, redis and implement reverse proxy
 - make a website for the packages like npm registry
@@ -9,7 +9,9 @@
 - write docs
 - finish chatGPT helper and implement --commnets to add dont write comments to the code but keep existing one to the pasted clipboard
 - implement grafana,jenkins, terraform for the kubernetes deploy, kubernetes, prometheus and possibly ansible for the pi server architectue or the was
-  ** ANOTHER USECASE FOR THE TOOL **
+
+
+**ANOTHER USECASE FOR THE TOOL**
 - implement rabbitmq for communication between services
 
 - if you often need to pase more that one file to chatGPT this tool can help generate a map of the direcotory and then paste it to chatGPT

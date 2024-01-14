@@ -1,0 +1,15 @@
+{
+  "name": "cli_tests_and_usage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "template_maker_tests.js",
+  "scripts": {
+    "test": "jest template_maker_tests.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^29.7.0"
+  }
+}

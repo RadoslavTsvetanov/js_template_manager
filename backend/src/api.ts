@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import { Saver } from './saver'; // Import your Saver class implementation
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' })); // increase the string size limit 
 
 const saver = new Saver('templates.json');
 

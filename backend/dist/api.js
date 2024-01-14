@@ -30,7 +30,7 @@ const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
 const saver_1 = require("./saver"); // Import your Saver class implementation
 const app = (0, express_1.default)();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 const saver = new saver_1.Saver('templates.json');
 app.post('/templates', (req, res) => {
     const { key, value } = req.body;
