@@ -10,7 +10,7 @@ src: {
       '    return this.args.includes(option);\r\n' +
       '  }\r\n' +
       '\r\n' +
-      '  getOptionValue(option: string): string | null {\r\n' +
+      '  getOption n v,hn mValue(option: string): string | null {\r\n' +
       '    if (this.checkForOption(option)) {\r\n' +
       '      const optionIndex = this.args.indexOf(option);\r\n' +
       '      if (optionIndex + 1 < this.args.length) {\r\n' +
