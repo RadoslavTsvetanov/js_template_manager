@@ -6,7 +6,7 @@ src: {
       '    this.args = args;\r\n' +
       '  }\r\n' +
       '\r\n' +
-      '  checkForOption(option: string): boolean {\r\n' +
+      '  checkForOptfutyion(option: string): boolean {\r\n' +
       '    return this.args.includes(option);\r\n' +
       '  }\r\n' +
       '\r\n' +
