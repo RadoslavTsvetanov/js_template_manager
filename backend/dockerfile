@@ -1,20 +1,15 @@
-# Use the latest Node.js image as base
-FROM node:latest
 
-# Set the working directory in the container
+FROM node:alpine
+
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+
 COPY package*.json ./
 
-# Install Node.js dependencies
 RUN npm install
 
-# Copy the built application files (dist folder)
 COPY dist ./dist
 
-# Expose the necessary port (e.g., 3000)
 EXPOSE 3000
 
-# Command to start the Node.js application
 CMD ["node", "dist/api.js"]
