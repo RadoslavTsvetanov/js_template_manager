@@ -1,4 +1,4 @@
-import { RedisConnector } from "../redis_connector";
+import { RedisConnector } from "./redis_connector";
 import {DBRepo} from "./main_db_client"
 export class Data_interacter {
   private redis_connector: RedisConnector;

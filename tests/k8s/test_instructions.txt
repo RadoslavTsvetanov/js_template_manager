@@ -1,0 +1,1 @@
+redis-cli -h <host> ( example ->192.168.49.2 to be cheked using `minikube ip`) -p <port>  (exmple -> 30001 need to expose redis db using nodePort )

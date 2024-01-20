@@ -1,6 +1,6 @@
 // code duplication from cache interacter since everything will be dployed in its own docker container 
 import {createClient} from "redis"
-
+import "dotenv/config"
 export class RedisConnector {
     client: any;
     constructor() {
