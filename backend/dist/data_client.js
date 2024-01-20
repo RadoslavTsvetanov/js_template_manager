@@ -14,7 +14,7 @@ class Data_interacter {
             console.log('Template found in Redis cache.');
             return cachedTemplate;
         }
-        const templateFromMainDB = await this.main_db_connector.get_template(name);
+        const templateFromMainDB = await this.main_db_connector.getTemplate(name);
         if (templateFromMainDB) {
             console.log('Template found in the main database.');
             await this.redis_connector.set(name, templateFromMainDB);

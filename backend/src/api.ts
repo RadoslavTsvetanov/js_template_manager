@@ -1,7 +1,17 @@
 import express, { Request, Response } from 'express';
 import * as bodyParser from 'body-parser';
-import { Saver } from './saver'; // Import your Saver class implementation
+import { Saver } from './saver'; 
 import { data_interacter } from './data_client';
+type unvalid = null | undefined
+function check_value<unvalid>(input: any,value: unvalid){
+    if(input == value){
+        return true;
+    }
+    return false
+}
+function validate_input(input: any){
+    return ((check_value(input,undefined)) || check_value(input,null))
+}
 const app = express();
 app.use(bodyParser.json({ limit: '10mb' })); // increase the string size limit 
 const saver = new Saver('templates.json');
@@ -16,7 +26,10 @@ app.post('/templates',async (req: Request, res: Response) => {
     // }
     // saver.create(key, value);
     // res.status(201).json({ message: `Template ${key} created successfully.` });
-   const result = await data_interacter.create_template(key,value) 
+    if(validate_input(key) || validate_input(value)){
+        return res.status(500).json("must specify both key and value")
+    }
+    const result = await data_interacter.create_template(key,value) 
    if(result){
     return res.status(200).json("succesfully created")
    }
@@ -24,17 +37,20 @@ app.post('/templates',async (req: Request, res: Response) => {
 });
 
 app.get('/templates/:key',async (req: Request, res: Response) => {
-    const template_name = saver.get(req.params.key);
+    const template_name = req.params.key;
     // if (template) {
     //     res.json({ [req.params.key]: template });
     // } else {
     //     res.status(404).json({ error: `Template with key ${req.params.key} not found.` });
     //}
-    if(template_name == undefined){
+    if(validate_input(template_name)){
         return res.status(500).json("specify template name")
     }
     const template = await data_interacter.get_template(template_name);
-    return res.status(200).json("created succesfully")
+    if(validate_input(template)){
+        return res.status(404).json("not found template")
+    }
+    return res.status(200).json({template:template})
 });
 
 app.delete('/templates/:key', (req: Request, res: Response) => {

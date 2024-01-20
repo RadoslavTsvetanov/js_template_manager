@@ -37,10 +37,10 @@ export class DBRepo {
     }
   }
 
-  async getTemplate(templateId: string): Promise<ITemplateDocument | null> {
+  async getTemplate(templateName: string): Promise<string | null> {
     try {
-      const template = await TemplateModel.findById(templateId);
-      return template;
+      const template = await TemplateModel.findOne({name:templateName});
+      return JSON.stringify(template);
     } catch (error: any) {
       throw new Error(`Error getting template: ${error.message}`);
     }

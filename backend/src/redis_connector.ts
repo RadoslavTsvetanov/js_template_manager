@@ -5,6 +5,7 @@ export class RedisConnector {
     client: any;
     constructor() {
       this.client = createClient({url:process.env.REDIS_URI});
+      this.connect()
       this.client.on('error', (err : any)  => console.log('Redis Client Error', err));
     }
   

@@ -7,6 +7,7 @@ require("dotenv/config");
 class RedisConnector {
     constructor() {
         this.client = (0, redis_1.createClient)({ url: process.env.REDIS_URI });
+        this.connect();
         this.client.on('error', (err) => console.log('Redis Client Error', err));
     }
     async connect() {

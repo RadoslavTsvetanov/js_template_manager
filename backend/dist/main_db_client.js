@@ -53,10 +53,10 @@ class DBRepo {
             throw new Error(`Error deleting template: ${error.message}`);
         }
     }
-    async getTemplate(templateId) {
+    async getTemplate(templateName) {
         try {
-            const template = await TemplateModel.findById(templateId);
-            return template;
+            const template = await TemplateModel.findOne({ name: templateName });
+            return JSON.stringify(template);
         }
         catch (error) {
             throw new Error(`Error getting template: ${error.message}`);

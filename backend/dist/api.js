@@ -28,8 +28,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
-const saver_1 = require("./saver"); // Import your Saver class implementation
+const saver_1 = require("./saver");
 const data_client_1 = require("./data_client");
+function check_value(input, value) {
+    if (input == value) {
+        return true;
+    }
+    return false;
+}
+function validate_input(input) {
+    return ((check_value(input, undefined)) || check_value(input, null));
+}
 const app = (0, express_1.default)();
 app.use(bodyParser.json({ limit: '10mb' })); // increase the string size limit 
 const saver = new saver_1.Saver('templates.json');
@@ -44,6 +53,9 @@ app.post('/templates', async (req, res) => {
     // }
     // saver.create(key, value);
     // res.status(201).json({ message: `Template ${key} created successfully.` });
+    if (validate_input(key) || validate_input(value)) {
+        return res.status(500).json("must specify both key and value");
+    }
     const result = await data_client_1.data_interacter.create_template(key, value);
     if (result) {
         return res.status(200).json("succesfully created");
@@ -51,17 +63,20 @@ app.post('/templates', async (req, res) => {
     return res.status(500).json("smthing bad happend");
 });
 app.get('/templates/:key', async (req, res) => {
-    const template_name = saver.get(req.params.key);
+    const template_name = req.params.key;
     // if (template) {
     //     res.json({ [req.params.key]: template });
     // } else {
     //     res.status(404).json({ error: `Template with key ${req.params.key} not found.` });
     //}
-    if (template_name == undefined) {
+    if (validate_input(template_name)) {
         return res.status(500).json("specify template name");
     }
     const template = await data_client_1.data_interacter.get_template(template_name);
-    return res.status(200).json("created succesfully");
+    if (validate_input(template)) {
+        return res.status(404).json("not found template");
+    }
+    return res.status(200).json({ template: template });
 });
 app.delete('/templates/:key', (req, res) => {
     saver.delete(req.params.key);

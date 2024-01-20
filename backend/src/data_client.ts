@@ -2,7 +2,7 @@ import { RedisConnector } from "./redis_connector";
 import {DBRepo} from "./main_db_client"
 export class Data_interacter {
   private redis_connector: RedisConnector;
-  private main_db_connector: any; 
+  private main_db_connector: DBRepo; 
 
   constructor(redis_connector: RedisConnector, main_db_connector: any) {
     this.redis_connector = redis_connector;
@@ -15,7 +15,7 @@ export class Data_interacter {
       console.log('Template found in Redis cache.');
       return cachedTemplate;
     }
-    const templateFromMainDB = await this.main_db_connector.get_template(name);
+    const templateFromMainDB = await this.main_db_connector.getTemplate(name);
     if (templateFromMainDB) {
       console.log('Template found in the main database.');
       await this.redis_connector.set(name, templateFromMainDB);
