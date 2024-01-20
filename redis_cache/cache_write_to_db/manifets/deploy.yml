@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-clearer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-clearer
+  template:
+    metadata:
+      labels:
+        app: cache-clearer
+    spec:
+      containers:
+        - name: your-app-container
+          image: your-app-image:latest
+          env:
+            - name: REDIS_URI
+              value: "YOUR_REDIS_URI"

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: redis-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: redis
@@ -18,3 +18,8 @@ spec:
           ports:
             - containerPort: 6379
               nodePort: 31665
+          env:
+            - name: HOST
+              value: "redis-service"
+            - name: PORT
+              value: "6379" 
