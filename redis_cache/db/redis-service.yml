@@ -7,5 +7,7 @@ spec:
     app: redis
   ports:
     - protocol: TCP
-      port: 6379 #port from which the service accepts traffic
-      targetPort: 6379 # port to which it routes
+      port: 6379       # Port from which the service accepts traffic
+      targetPort: 6379 # Port to which it routes
+      nodePort: 30001  # Specify the NodePort here
+  type: NodePort       # Add this line to expose a NodePort

@@ -1,5 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
-
+import 'dotenv/config'
 interface ITemplate {
   name: string;
   content: string;
@@ -14,7 +14,12 @@ const templateSchema = new Schema<ITemplateDocument>({
 
 const TemplateModel: Model<ITemplateDocument> = mongoose.model('Template', templateSchema);
 
-class DBRepo {
+// Connect to MongoDB
+mongoose.connect(process.env.MAIN_DB_URI || "") // bad practice but need to keep the ts compiler happy
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((error) => console.error('Error connecting to MongoDB:', error));
+
+export class DBRepo {
   async createTemplate(templateData: ITemplate): Promise<ITemplateDocument> {
     try {
       const createdTemplate = await TemplateModel.create(templateData);
@@ -41,5 +46,3 @@ class DBRepo {
     }
   }
 }
-
-export default DBRepo;

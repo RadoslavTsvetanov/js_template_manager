@@ -4,3 +4,4 @@ node_modules
 /random_things_tester
 /coding
 coding
+backend/.env
