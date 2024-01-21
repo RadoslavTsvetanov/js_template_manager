@@ -10,7 +10,7 @@
 
 ** INSTALLATION FOR REVIEWING AND CONTRIBUTING TO CODE **
 
-- node amd nnpm installed
+- node amd npm installed
   -> for backend
   --docker can be used tooo for running the backend
   -- npm i
@@ -21,3 +21,4 @@
   --node dist/index.js
 
 ** DOCS **
+<cli command> setURL -> if you want to host your own template manager for security reasons
