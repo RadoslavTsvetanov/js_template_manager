@@ -3,8 +3,9 @@
 import { CommandLineArguments } from "./command_line_arguments_parser.js";
 import { ApiClient } from "./api_client.js";
 import { TemplateMaker } from "./Template_maker.js";
-
+import { Config, config } from "./config_saver.js";
 enum command_options {
+  SET_URL = "--setURL",
   ADD = "--add",
   REMOVE = "--remove",
   INSTALL = "--install",
@@ -40,6 +41,10 @@ async function main() {
       JSON.parse(template[args.getOptionValue(command_options.NAME)]),
       directory
     );
+  } else if (args.checkForOption(command_options.SET_URL)) {
+    config.set_url(args.getOptionValue(command_options.SET_URL))
+    console.log(config.get_url())
+    console.log("-----")
   }
 }
 

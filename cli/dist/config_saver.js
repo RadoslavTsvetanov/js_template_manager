@@ -1,34 +1,22 @@
 import * as fs from 'fs';
-
-type Invalid = null | undefined;
-
-function checkValue(value: any, invalidValue: Invalid): boolean {
+function checkValue(value, invalidValue) {
     return value === invalidValue;
 }
-
-function validateInput(input: any): boolean {
+function validateInput(input) {
     return checkValue(input, undefined) || checkValue(input, null);
 }
-
-type JSONData = {
-    url: string;
-    additional_config: object;
-};
-
 class FileManager {
-    private _filePath: string;
-
-    constructor(filePath: string) {
+    constructor(filePath) {
         this._filePath = filePath;
     }
-
-    public getJson(): JSONData | undefined {
+    getJson() {
         const default_url = "http://localhost:3000";
         try {
             const fileContent = fs.readFileSync(this._filePath, 'utf-8');
-            const config: JSONData = JSON.parse(fileContent);
+            const config = JSON.parse(fileContent);
             return config;
-        } catch (error) {
+        }
+        catch (error) {
             this.writeJson({
                 url: default_url,
                 additional_config: {},
@@ -36,36 +24,29 @@ class FileManager {
             return undefined;
         }
     }
-
-    public writeJson(data: JSONData): void {
+    writeJson(data) {
         const jsonData = JSON.stringify(data, null, 2);
-
         if (!fs.existsSync(this._filePath)) {
             fs.writeFileSync(this._filePath, jsonData, 'utf-8');
-        } else {
+        }
+        else {
             fs.writeFileSync(this._filePath, jsonData, 'utf-8');
         }
     }
 }
-
 export class Config {
-    private fileManager: FileManager;
-
-    constructor(fileManager: FileManager) {
+    constructor(fileManager) {
         this.fileManager = fileManager;
     }
-
-    public get_url(): string | undefined {
+    get_url() {
         const config = this.fileManager.getJson();
         return config?.url;
     }
-
-    public set_url(newUrl: string) {
+    set_url(newUrl) {
         if (validateInput(newUrl)) {
-            console.log("url must be != undefined")
+            console.log("url must be != undefined");
             return;
         }
-
         const existingConfig = this.fileManager.getJson();
         this.fileManager.writeJson({
             url: newUrl,
@@ -73,5 +54,5 @@ export class Config {
         });
     }
 }
-
-export const config = new Config(new FileManager("./config.json"))
+export const config = new Config(new FileManager("./config.json"));
+//# sourceMappingURL=config_saver.js.map

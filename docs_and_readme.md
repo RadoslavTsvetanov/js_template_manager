@@ -21,4 +21,4 @@
   --node dist/index.js
 
 ** DOCS **
-<cli command> setURL -> if you want to host your own template manager for security reasons
+<cli command> --setURL -> if you want to host your own template manager for security reasons
