@@ -5,7 +5,7 @@ function checkValue(value, invalidValue) {
 function validateInput(input) {
     return checkValue(input, undefined) || checkValue(input, null);
 }
-class FileManager {
+export class FileManager {
     constructor(filePath) {
         this._filePath = filePath;
     }
@@ -54,5 +54,4 @@ export class Config {
         });
     }
 }
-export const config = new Config(new FileManager("./config.json"));
 //# sourceMappingURL=config_saver.js.map

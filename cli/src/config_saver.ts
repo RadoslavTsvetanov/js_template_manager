@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-
+import path from "path";
 type Invalid = null | undefined;
 
 function checkValue(value: any, invalidValue: Invalid): boolean {
@@ -15,7 +15,7 @@ type JSONData = {
     additional_config: object;
 };
 
-class FileManager {
+export class FileManager {
     private _filePath: string;
 
     constructor(filePath: string) {
@@ -73,5 +73,3 @@ export class Config {
         });
     }
 }
-
-export const config = new Config(new FileManager("./config.json"))
