@@ -4,7 +4,7 @@ import { Saver } from './saver';
 import { data_interacter } from './data_client';
 type unvalid = null | undefined
 function check_value<unvalid>(input: any,value: unvalid){
-    if(input == value){
+    if(input === value) {
         return true;
     }
     return false
@@ -57,7 +57,14 @@ app.delete('/templates/:key', (req: Request, res: Response) => {
     saver.delete(req.params.key);
     res.json({ message: `Template ${req.params.key} deleted successfully.` });
 });
+app.get('templates/get_all', (req:Request, res:Response) => {
+    const templates = data_interacter.get_all_templates()
+    if (validate_input(templates)) {
+        return res.status(500)
+    }
+    return res.status(200).json(templates)
 
+})
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

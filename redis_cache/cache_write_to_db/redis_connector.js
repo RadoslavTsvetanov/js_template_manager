@@ -1,8 +1,8 @@
 class RedisConnector {
     constructor() {
       this.client = createClient({
-        host: process.env.HOST,
-        port: process.env.PORT
+        host: process.env.HOST || "localhost",
+        port: process.env.PORT || 6379,
       });
       this.client.on('error', (err) => console.log('Redis Client Error', err));
     }

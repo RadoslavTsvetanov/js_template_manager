@@ -33,6 +33,14 @@ export class Data_interacter {
     }
     return true;
   }
+
+  async get_all_templates() {
+    try {
+      return await this.main_db_connector.getAllTemplates()
+    }catch(err){
+      return undefined
+    }
+  }
 }
 
 

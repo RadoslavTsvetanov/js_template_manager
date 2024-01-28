@@ -26,13 +26,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DBRepo = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 require("dotenv/config");
+console.log(process.env.MAIN_DB_URI);
 const templateSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     content: { type: String, required: true },
 });
 const TemplateModel = mongoose_1.default.model('Template', templateSchema);
 // Connect to MongoDB
-mongoose_1.default.connect(process.env.MAIN_DB_URI || "") // bad practice but need to keep the ts compiler happy
+mongoose_1.default.connect(process.env.MAIN_DB_URI || "mongodb+srv://rado:rado@task-manager.8d8g6sk.mongodb.net/?retryWrites=true&w=majority") // bad practice but need to keep the ts compiler happy
     .then(() => console.log('Connected to MongoDB'))
     .catch((error) => console.error('Error connecting to MongoDB:', error));
 class DBRepo {

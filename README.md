@@ -17,3 +17,6 @@
 - if you often need to pase more that one file to chatGPT this tool can help generate a map of the direcotory and then paste it to chatGPT
 - disclaimer -> feauture is not fully implemented yet and in the future with my-command --map you it will automatically copy it to your clipboard
 - to help with chatGPT usgae you will also be able to define a file in which you will put things for chata like dont write comments ...
+
+
+

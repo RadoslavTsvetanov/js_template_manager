@@ -26,3 +26,4 @@ my-command --install --name myTemplate --dir ./target-directory
 These commands are hypothetical and based on the command options defined in your script (--add, --remove, --install, --name, --dir). Replace the placeholders like ./template-directory, myTemplate, ./target-directory, etc., with actual file paths, template names, or directories you want to use in your CLI tool.
 
 You'll need to ensure that this script is made executable and is available in your system's PATH to run it directly from the terminal as my-command. Additionally, the script should have appropriate permissions (chmod +x my-command on Unix-like systems) to be executable.
+ 

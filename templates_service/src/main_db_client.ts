@@ -1,5 +1,6 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import 'dotenv/config'
+console.log(process.env.MAIN_DB_URI)
 interface ITemplate {
   name: string;
   content: string;
@@ -15,7 +16,7 @@ const templateSchema = new Schema<ITemplateDocument>({
 const TemplateModel: Model<ITemplateDocument> = mongoose.model('Template', templateSchema);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MAIN_DB_URI || "") // bad practice but need to keep the ts compiler happy
+mongoose.connect(process.env.MAIN_DB_URI || "mongodb+srv://rado:rado@task-manager.8d8g6sk.mongodb.net/?retryWrites=true&w=majority") // bad practice but need to keep the ts compiler happy
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('Error connecting to MongoDB:', error));
 
@@ -43,6 +44,15 @@ export class DBRepo {
       return JSON.stringify(template);
     } catch (error: any) {
       throw new Error(`Error getting template: ${error.message}`);
+    }
+  }
+
+  async getAllTemplates(){
+    try {
+      const templates = await TemplateModel.find();
+      return templates;
+    } catch (error: any) {
+      throw new Error(`Error getting all templates: ${error.message}`)
     }
   }
 }
