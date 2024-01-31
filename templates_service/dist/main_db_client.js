@@ -63,5 +63,14 @@ class DBRepo {
             throw new Error(`Error getting template: ${error.message}`);
         }
     }
+    async getAllTemplates() {
+        try {
+            const templates = await TemplateModel.find();
+            return templates;
+        }
+        catch (error) {
+            throw new Error(`Error getting all templates: ${error.message}`);
+        }
+    }
 }
 exports.DBRepo = DBRepo;

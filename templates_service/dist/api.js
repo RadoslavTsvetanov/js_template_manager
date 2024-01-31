@@ -31,7 +31,7 @@ const bodyParser = __importStar(require("body-parser"));
 const saver_1 = require("./saver");
 const data_client_1 = require("./data_client");
 function check_value(input, value) {
-    if (input == value) {
+    if (input === value) {
         return true;
     }
     return false;
@@ -81,6 +81,13 @@ app.get('/templates/:key', async (req, res) => {
 app.delete('/templates/:key', (req, res) => {
     saver.delete(req.params.key);
     res.json({ message: `Template ${req.params.key} deleted successfully.` });
+});
+app.get('templates/get_all', (req, res) => {
+    const templates = data_client_1.data_interacter.get_all_templates();
+    if (validate_input(templates)) {
+        return res.status(500);
+    }
+    return res.status(200).json(templates);
 });
 const PORT = 3000;
 app.listen(PORT, () => {

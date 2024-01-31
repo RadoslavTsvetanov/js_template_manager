@@ -30,6 +30,14 @@ class Data_interacter {
         }
         return true;
     }
+    async get_all_templates() {
+        try {
+            return await this.main_db_connector.getAllTemplates();
+        }
+        catch (err) {
+            return undefined;
+        }
+    }
 }
 exports.Data_interacter = Data_interacter;
 exports.data_interacter = new Data_interacter(new redis_connector_1.RedisConnector(), new main_db_client_1.DBRepo());
