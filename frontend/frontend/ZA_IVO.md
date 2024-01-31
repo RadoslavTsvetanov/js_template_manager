@@ -1,0 +1,1 @@
+make requests to the backend hosted on (zvunni mi kato go pravish i shte ti kazha url-a) using axios or the custom wrapper from RadoslavTsvetsnov and make a page in the format of template/:template name where it renders the content and name of the template
