@@ -1,0 +1,13 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    ports: 
+      - "6379:6379"
+
+  template_service:
+    image: radoslav123/templates_service:latest
+    environment:
+      - REDIS_URI=redis://redis:6379 #<service-name>:<host>:<port> 
+    ports:
+      - "3000:3000"

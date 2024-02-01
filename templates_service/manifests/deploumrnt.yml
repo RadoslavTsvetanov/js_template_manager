@@ -17,3 +17,9 @@ spec:
         image: rado123321/back:latest
         ports:
         - containerPort: 3000
+        env:
+        - name: MAIN_DB_URI
+          value: "mongodb+srv://rado:rado@task-manager.8d8g6sk.mongodb.net/?retryWrites=true&w=majority"
+        - name: REDIS_URI
+          value: "localhost:6379"
+

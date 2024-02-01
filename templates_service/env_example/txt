@@ -1,2 +1,0 @@
-MAIN_DB_URI="mongodb+srv://<name>:<password>@task-manager.8d8g6sk.mongodb.net/?retryWrites=true&w=majority"
-REDIS_URI="<host>:<port>"
