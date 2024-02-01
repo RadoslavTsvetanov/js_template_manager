@@ -18,9 +18,10 @@ export class Data_interacter {
     const templateFromMainDB = await this.main_db_connector.getTemplate(name);
     if (templateFromMainDB) {
       console.log('Template found in the main database.');
-      await this.redis_connector.set(name, templateFromMainDB);
+     // await this.redis_connector.set(name, templateFromMainDB);
       return templateFromMainDB;
     }
+  
 
     console.log('Template not found.');
     return undefined;

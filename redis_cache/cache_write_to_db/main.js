@@ -1,5 +1,5 @@
 const { RedisConnector } = require("./redis_connector");
-const { DBRepo } = require("../../backend/dist/main_db_client");
+const { DBRepo } = require("./mongo_connector");
 
 function constructDBObject(key, value) {
   return {
@@ -9,7 +9,8 @@ function constructDBObject(key, value) {
 }
 
 async function writeToDB(object, mainDBConnector) {
-  await mainDBConnector.createTemplate(object);
+  const log = await mainDBConnector.createTemplate(object);
+  console.log(log)
 }
 
 async function writeCacheToDB(redisConnector, batchCount) {
@@ -37,6 +38,7 @@ async function writeCacheToDB(redisConnector, batchCount) {
 }
 
 async function cache_clearer(batchCount) {
+  console.log("clearing cache")
   const redisConnector = new RedisConnector();
 
   try {
@@ -51,4 +53,6 @@ function fetch_data_wraper(){
   cache_clearer(4)
 }
 fetch_data_wraper()
-setInterval(() =>fetch_data_wraper , 3600000);
+const every_minute = 1 * 1000 * 60
+
+setInterval(() =>{fetch_data_wraper() }, every_minute);

@@ -11,3 +11,8 @@ services:
       - REDIS_URI=redis://redis:6379 #<service-name>:<host>:<port> 
     ports:
       - "3000:3000"
+ 
+  cache_clearer:
+    image: radoslav123/cacher:latest
+    environment:
+      - REDIS_URI=redis://redis:6379
