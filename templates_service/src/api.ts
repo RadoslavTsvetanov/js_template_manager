@@ -77,5 +77,5 @@ app.get('/all_templates', async (req:Request, res:Response) => {
 })
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(` Server running on port ${PORT}`);
 });
