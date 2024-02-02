@@ -50,4 +50,4 @@ function Form({ button_text, input_data_arr }: FormProps) {
     );
   }
   
-  export default Form;
+export default Form;
