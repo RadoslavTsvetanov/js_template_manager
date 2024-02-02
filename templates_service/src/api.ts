@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import * as bodyParser from 'body-parser';
 import { Saver } from './saver'; 
 import { data_interacter } from './data_client';
+import cors from 'cors';
 type unvalid = null | undefined
 function check_value<unvalid>(input: any,value: unvalid){
     if(input === value) {
@@ -13,6 +14,8 @@ function validate_input(input: any){
     return ((check_value(input,undefined)) || check_value(input,null))
 }
 const app = express();
+app.use(cors());
+
 app.use(bodyParser.json({ limit: '10mb' })); // increase the string size limit 
 const saver = new Saver('templates.json');
 app.post('/templates',async (req: Request, res: Response) => {
@@ -26,8 +29,15 @@ app.post('/templates',async (req: Request, res: Response) => {
     // }
     // saver.create(key, value);
     // res.status(201).json({ message: `Template ${key} created successfully.` });
-    if(validate_input(key) || validate_input(value)){
+    
+    
+    if (validate_input(key) || validate_input(value)) {
         return res.status(500).json("must specify both key and value")
+    }
+    const existing_template = await data_interacter.get_template(key);
+
+    if (validate_input(existing_template)) {
+        return res.status(409).json(`template with name ${key}already exists`)
     }
     const result = await data_interacter.create_template(key,value) 
    if(result){
@@ -57,8 +67,8 @@ app.delete('/templates/:key', (req: Request, res: Response) => {
     saver.delete(req.params.key);
     res.json({ message: `Template ${req.params.key} deleted successfully.` });
 });
-app.get('templates/get_all', (req:Request, res:Response) => {
-    const templates = data_interacter.get_all_templates()
+app.get('/all_templates', async (req:Request, res:Response) => {
+    const templates = await data_interacter.get_all_templates()
     if (validate_input(templates)) {
         return res.status(500)
     }

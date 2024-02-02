@@ -65,7 +65,8 @@ class DBRepo {
     }
     async getAllTemplates() {
         try {
-            const templates = await TemplateModel.find();
+            const templates = await TemplateModel.find({});
+            console.log(templates);
             return templates;
         }
         catch (error) {

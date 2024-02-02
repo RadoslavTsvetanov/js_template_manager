@@ -30,6 +30,7 @@ const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
 const saver_1 = require("./saver");
 const data_client_1 = require("./data_client");
+const cors_1 = __importDefault(require("cors"));
 function check_value(input, value) {
     if (input === value) {
         return true;
@@ -40,6 +41,7 @@ function validate_input(input) {
     return ((check_value(input, undefined)) || check_value(input, null));
 }
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
 app.use(bodyParser.json({ limit: '10mb' })); // increase the string size limit 
 const saver = new saver_1.Saver('templates.json');
 app.post('/templates', async (req, res) => {
@@ -55,6 +57,10 @@ app.post('/templates', async (req, res) => {
     // res.status(201).json({ message: `Template ${key} created successfully.` });
     if (validate_input(key) || validate_input(value)) {
         return res.status(500).json("must specify both key and value");
+    }
+    const existing_template = await data_client_1.data_interacter.get_template(key);
+    if (validate_input(existing_template)) {
+        return res.status(409).json(`template with name ${key}already exists`);
     }
     const result = await data_client_1.data_interacter.create_template(key, value);
     if (result) {
@@ -82,8 +88,8 @@ app.delete('/templates/:key', (req, res) => {
     saver.delete(req.params.key);
     res.json({ message: `Template ${req.params.key} deleted successfully.` });
 });
-app.get('templates/get_all', (req, res) => {
-    const templates = data_client_1.data_interacter.get_all_templates();
+app.get('/all_templates', async (req, res) => {
+    const templates = await data_client_1.data_interacter.get_all_templates();
     if (validate_input(templates)) {
         return res.status(500);
     }

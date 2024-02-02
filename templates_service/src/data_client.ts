@@ -37,7 +37,8 @@ export class Data_interacter {
 
   async get_all_templates() {
     try {
-      return await this.main_db_connector.getAllTemplates()
+      const templates =  await this.main_db_connector.getAllTemplates()
+      return templates
     }catch(err){
       return undefined
     }
