@@ -41,15 +41,9 @@ async function main() {
     const Templater = new TemplateMaker(directory);
     const api = new ApiClient(config.get_url());
 
-    const template: any = await api.getTemplate(args.getOptionValue(command_options.NAME));
-    console.log("before api")
-    //error somewhere after this the is error
-    console.dir(template)
-    const actual_template = JSON.parse(template.content)
-    //befire
-    console.log("after api")
+    const template = await api.getTemplate(args.getOptionValue(command_options.NAME));
     Templater.generateFilesFromTemplate(
-      actual_template,
+      JSON.parse(template[args.getOptionValue(command_options.NAME)]),
       directory
     );
   } else if (args.checkForOption(command_options.SET_URL)) {

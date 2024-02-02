@@ -12,18 +12,21 @@ export class ApiClient {
             await axios.post(`${this.baseURL}/templates`, { key, value });
             console.log(`Template ${key} created successfully.`);
         } catch (error) {
-            console.error('Error creating template:', error.response?.data || error.message);
+            console.error('Error creating template:', error);
         }
     }
 
     async getTemplate(key: string): Promise<void> {
         try {
             const response: AxiosResponse = await axios.get(`${this.baseURL}/templates/${key}`);
-            console.log(`Template ${key}:`, response.data);
-            return response.data
+            console.log(`Template ${key}:`, response.data.template);
+            const template = JSON.parse(response.data.template)
+            console.log("succesfully parsed from getTemplate")
+            return template
         } catch (error) {
             console.error('Error retrieving template:', error.response?.data || error.message);
         }
+
     }
 
     async deleteTemplate(key: string): Promise<void> {

@@ -5,3 +5,4 @@ node_modules
 /coding
 coding
 backend/.env
+[0-9]*
